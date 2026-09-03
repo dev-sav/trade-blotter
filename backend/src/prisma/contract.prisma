@@ -1,0 +1,28 @@
+// use prisma-next
+
+model Trade {
+  id             Int      @id @default(autoincrement())
+  symbol         String
+  quantity       Int
+  price          Float
+  side           TradeSide
+  trader         String
+  tradeTimestamp TimestamptzString
+  status         TradeStatus
+  createdAt      TimestamptzString @default(now())
+  updatedAt      temporal.updatedAtString()
+
+  @@index([symbol])
+  @@index([tradeTimestamp])
+  @@index([status])
+}
+
+enum TradeSide {
+  BUY
+  SELL
+}
+
+enum TradeStatus {
+  ACTIVE
+  CANCELLED
+}
