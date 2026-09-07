@@ -5,7 +5,7 @@ import {
     validateCreateTradeRequest,
 } from '../validation/tradeValidation.js';
 
-import { broadcastTradeUpdate } from '../services/webSocketService.js';
+import { broadcastTradeUpdate } from '../services/websocketService.js';
 
 import {
     amendTrade,
