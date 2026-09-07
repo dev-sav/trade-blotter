@@ -8,6 +8,11 @@ import type { Trade, TradeSide, TradeStatus } from './types/trade';
 import AmendTradeForm from './components/AmendTradeForm/AmendTradeForm'
 import CancelTradeDialog from './components/CancelTradeDialog/CancelTradeDialog';
 
+import {
+  connectToTradeUpdates,
+  type TradeEvent,
+} from './services/websocketService';
+
 import './App.css';
 
 function App() {
@@ -47,6 +52,32 @@ function App() {
   useEffect(() => {
     void loadTrades();
   }, []);
+
+  useEffect(() => {
+    const disconnect = connectToTradeUpdates(handleTradeEvent);
+
+    return disconnect;
+  }, []);
+
+  function handleTradeEvent(event: TradeEvent) {
+  setTrades((currentTrades) => {
+    switch (event.type) {
+      case 'TRADE_CREATED':
+        return [...currentTrades, event.trade];
+
+      case 'TRADE_UPDATED':
+      case 'TRADE_CANCELLED':
+        return currentTrades.map((trade) =>
+          trade.id === event.trade.id
+            ? event.trade
+            : trade,
+        );
+
+      default:
+        return currentTrades;
+    }
+  });
+}
 
   const filteredTrades = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
