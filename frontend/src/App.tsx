@@ -60,24 +60,24 @@ function App() {
   }, []);
 
   function handleTradeEvent(event: TradeEvent) {
-  setTrades((currentTrades) => {
-    switch (event.type) {
-      case 'TRADE_CREATED':
-        return [...currentTrades, event.trade];
+    setTrades((currentTrades) => {
+      switch (event.type) {
+        case 'TRADE_CREATED':
+          return [...currentTrades, event.trade];
 
-      case 'TRADE_UPDATED':
-      case 'TRADE_CANCELLED':
-        return currentTrades.map((trade) =>
-          trade.id === event.trade.id
-            ? event.trade
-            : trade,
-        );
+        case 'TRADE_UPDATED':
+        case 'TRADE_CANCELLED':
+          return currentTrades.map((trade) =>
+            trade.id === event.trade.id
+              ? event.trade
+              : trade,
+          );
 
-      default:
-        return currentTrades;
-    }
-  });
-}
+        default:
+          return currentTrades;
+      }
+    });
+  }
 
   const filteredTrades = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();

@@ -1,21 +1,9 @@
-import express from 'express';
-import cors from 'cors';
 import http from 'http';
 import 'dotenv/config';
 
-import tradeRoutes from './routes/tradeRoutes.js';
+import app from './app.js';
 import { initializeWebSocketServer } from './services/webSocketService.js';
 
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-
-app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok' });
-});
-
-app.use('/api/trades', tradeRoutes);
 
 const PORT = process.env.PORT || 3000;
 
