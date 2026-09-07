@@ -14,7 +14,7 @@ export type TradeEvent =
       trade: Trade;
     };
 
-const WS_URL = 'ws://localhost:3000/ws';
+const WS_URL = import.meta.env.VITE_WS_URL;
 const RECONNECT_DELAY = 2000;
 
 export function connectToTradeUpdates(

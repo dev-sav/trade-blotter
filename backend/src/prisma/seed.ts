@@ -38,15 +38,24 @@ function randomPrice(): number {
 }
 
 function randomDate(): string {
-  const now = Date.now();
-  const daysAgo = Math.floor(Math.random() * 30);
+    const now = Date.now();
+    const daysAgo = Math.floor(Math.random() * 30);
 
-  return new Date(
-    now - daysAgo * 24 * 60 * 60 * 1000,
-  ).toISOString();
+    return new Date(
+        now - daysAgo * 24 * 60 * 60 * 1000,
+    ).toISOString();
 }
 
 async function main() {
+    console.log('Checking trades...');
+
+    const existingTrade = await db.orm.public.Trade.first();
+
+    if (existingTrade) {
+        console.log('Trades already exist. Skipping seed.');
+        return;
+    }
+
     console.log('Seeding trades...');
 
     const trades = Array.from({ length: 100 }, () => ({

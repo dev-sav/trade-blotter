@@ -8,6 +8,7 @@ describe('Trade API', () => {
     const response = await request(app)
       .get('/api/trades');
 
+    console.log(response.body);
     expect(response.status).toBe(200);
     expect(Array.isArray(response.body)).toBe(true);
   });

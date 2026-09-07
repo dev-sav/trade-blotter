@@ -26,8 +26,9 @@ export async function getTradesController(
         console.error('Failed to retrieve trades:', error);
 
         return res.status(500).json({
-            message: 'Failed to retrieve trades',
-        });
+    message: 'Failed to retrieve trades',
+    error: error instanceof Error ? error.message : String(error),
+});
     }
 }
 

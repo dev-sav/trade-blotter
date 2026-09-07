@@ -2,7 +2,7 @@ import http from 'http';
 import 'dotenv/config';
 
 import app from './app.js';
-import { initializeWebSocketServer } from './services/webSocketService.js';
+import { initializeWebSocketServer } from './services/websocketService.js';
 
 
 const PORT = process.env.PORT || 3000;
