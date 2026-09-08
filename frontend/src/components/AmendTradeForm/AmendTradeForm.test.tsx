@@ -36,6 +36,7 @@ describe('AmendTradeForm', () => {
         render(
             <AmendTradeForm
                 trade={trade}
+                currentUserId={1}
                 onUpdated={onUpdated}
                 onCancel={onCancel}
             />,

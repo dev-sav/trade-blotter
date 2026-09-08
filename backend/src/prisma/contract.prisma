@@ -1,7 +1,15 @@
 // use prisma-next
+model User {
+  id        Int               @id @default(autoincrement())
+  name      String
+  email     String            @unique
+  createdAt TimestamptzString @default(now())
+
+  auditLogs AuditLog[]
+}
 
 model Trade {
-  id             Int      @id @default(autoincrement())
+  id             Int               @id @default(autoincrement())
   symbol         String
   quantity       Int
   price          Float
@@ -10,11 +18,29 @@ model Trade {
   tradeTimestamp TimestamptzString
   status         TradeStatus
   createdAt      TimestamptzString @default(now())
-  updatedAt      temporal.updatedAtString()
+  updatedAt      TimestamptzString @default(now())
+
+  auditLogs      AuditLog[]
 
   @@index([symbol])
   @@index([tradeTimestamp])
   @@index([status])
+}
+
+model AuditLog {
+  id        Int               @id @default(autoincrement())
+  tradeId   Int
+  userId    Int
+  action    AuditAction
+  details   String?
+  createdAt TimestamptzString @default(now())
+
+  trade     Trade             @relation(fields:[tradeId], references:[id])
+  user      User              @relation(fields:[userId], references:[id])
+
+  @@index([tradeId])
+  @@index([userId])
+  @@index([createdAt])
 }
 
 enum TradeSide {
@@ -24,5 +50,11 @@ enum TradeSide {
 
 enum TradeStatus {
   ACTIVE
+  CANCELLED
+}
+
+enum AuditAction {
+  CREATED
+  AMENDED
   CANCELLED
 }

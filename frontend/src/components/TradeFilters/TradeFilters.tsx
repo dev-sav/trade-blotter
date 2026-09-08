@@ -52,7 +52,7 @@ export function TradeFilters({
         <option value="CANCELLED">Cancelled</option>
       </select>
 
-      <button type="button" onClick={onRefresh}>
+      <button type="button"   className="refresh-button" onClick={onRefresh}>
         ↻ Refresh
       </button>
     </div>

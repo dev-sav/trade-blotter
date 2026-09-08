@@ -7,12 +7,14 @@ import './CancelTradeDialog.css';
 
 interface CancelTradeDialogProps {
   trade: Trade;
+  currentUserId: number | null;
   onCancelled: (trade: Trade) => void;
   onCancel: () => void;
 }
 
 function CancelTradeDialog({
   trade,
+  currentUserId,
   onCancelled,
   onCancel,
 }: CancelTradeDialogProps) {
@@ -24,11 +26,21 @@ function CancelTradeDialog({
 
   async function handleConfirm() {
     setError(null);
+
+
+    if (currentUserId === null) {
+      setError('Please select a current user');
+      return;
+    }
+
     setCancelling(true);
+
+
 
     try {
       const cancelledTrade = await cancelTrade(
         trade.id,
+        currentUserId
       );
 
       onCancelled(cancelledTrade);

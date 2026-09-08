@@ -23,6 +23,17 @@ const traders = [
     'Ethan',
 ];
 
+const users = [
+    {
+        name: 'Sav',
+        email: 'sav@example.com',
+    },
+    {
+        name: 'Guest',
+        email: 'guest@example.com',
+    },
+];
+
 const sides = ['BUY', 'SELL'] as const;
 
 function randomItem<T>(items: readonly T[]): T {
@@ -47,26 +58,39 @@ function randomDate(): string {
 }
 
 async function main() {
-    console.log('Checking trades...');
+    const existingUser = await db.orm.public.User.first();
+
+    let createdUsers;
+
+    if (existingUser) {
+        console.log('Users already exist. Skipping user seed.');
+        createdUsers = await db.orm.public.User.all();
+    } else {
+        console.log('Seeding users...');
+
+        createdUsers = await db.orm.public.User.createAll(users);
+
+        console.log(`Created ${createdUsers.length} users.`);
+    }
 
     const existingTrade = await db.orm.public.Trade.first();
 
     if (existingTrade) {
-        console.log('Trades already exist. Skipping seed.');
+        console.log('Trades already exist. Skipping trade seed.');
         return;
     }
 
     console.log('Seeding trades...');
 
     const trades = Array.from({ length: 100 }, () => ({
-        symbol: randomItem(symbols),
-        quantity: randomQuantity(),
-        price: randomPrice(),
-        side: randomItem(sides),
-        trader: randomItem(traders),
-        tradeTimestamp: randomDate(),
-        status: 'ACTIVE' as const,
-    }));
+    symbol: randomItem(symbols),
+    quantity: randomQuantity(),
+    price: randomPrice(),
+    side: randomItem(sides),
+    trader: randomItem(traders),
+    tradeTimestamp: randomDate(),
+    status: 'ACTIVE' as const,
+}));
 
     await db.orm.public.Trade.createAll(trades);
 

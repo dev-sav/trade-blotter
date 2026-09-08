@@ -10,13 +10,12 @@ interface TradeTableProps {
 }
 
 type SortColumn =
-    | 'id'
+    | 'tradeTimestamp'
     | 'symbol'
     | 'side'
     | 'quantity'
     | 'price'
     | 'trader'
-    | 'tradeTimestamp'
     | 'status';
 
 type SortDirection = 'asc' | 'desc';
@@ -36,20 +35,17 @@ function compareValues(
     column: SortColumn,
 ): number {
     switch (column) {
-        case 'id':
-            return a.id - b.id;
+        case 'tradeTimestamp':
+            return (
+                new Date(a.tradeTimestamp).getTime() -
+                new Date(b.tradeTimestamp).getTime()
+            );
 
         case 'quantity':
             return a.quantity - b.quantity;
 
         case 'price':
             return a.price - b.price;
-
-        case 'tradeTimestamp':
-            return (
-                new Date(a.tradeTimestamp).getTime() -
-                new Date(b.tradeTimestamp).getTime()
-            );
 
         case 'symbol':
             return a.symbol.localeCompare(b.symbol);
@@ -73,9 +69,10 @@ export function TradeTable({
     onAmend,
     onCancel,
 }: TradeTableProps) {
+
     const [sort, setSort] = useState<SortState>({
-        column: 'id',
-        direction: 'asc',
+        column: 'tradeTimestamp',
+        direction: 'desc',
     });
 
     const sortedTrades = useMemo(() => {
@@ -143,11 +140,15 @@ export function TradeTable({
                                 type="button"
                                 className="sort-button"
                                 onClick={() =>
-                                    handleSort('id')
+                                    handleSort(
+                                        'tradeTimestamp',
+                                    )
                                 }
                             >
-                                ID
-                                {renderSortIndicator('id')}
+                                Trade Date
+                                {renderSortIndicator(
+                                    'tradeTimestamp',
+                                )}
                             </button>
                         </th>
 
@@ -231,23 +232,6 @@ export function TradeTable({
                                 type="button"
                                 className="sort-button"
                                 onClick={() =>
-                                    handleSort(
-                                        'tradeTimestamp',
-                                    )
-                                }
-                            >
-                                Trade Date
-                                {renderSortIndicator(
-                                    'tradeTimestamp',
-                                )}
-                            </button>
-                        </th>
-
-                        <th>
-                            <button
-                                type="button"
-                                className="sort-button"
-                                onClick={() =>
                                     handleSort('status')
                                 }
                             >
@@ -265,7 +249,11 @@ export function TradeTable({
                 <tbody>
                     {sortedTrades.map((trade) => (
                         <tr key={trade.id}>
-                            <td>{trade.id}</td>
+                            <td>
+                                {formatTradeDate(
+                                    trade.tradeTimestamp,
+                                )}
+                            </td>
 
                             <td>{trade.symbol}</td>
 
@@ -296,18 +284,11 @@ export function TradeTable({
                             </td>
 
                             <td>{trade.trader}</td>
-
-                            <td>
-                                {formatTradeDate(
-                                    trade.tradeTimestamp,
-                                )}
-                            </td>
-
                             <td>
                                 <span
                                     className={
                                         trade.status ===
-                                        'ACTIVE'
+                                            'ACTIVE'
                                             ? 'trade-status-active'
                                             : 'trade-status-cancelled'
                                     }
@@ -318,7 +299,7 @@ export function TradeTable({
 
                             <td>
                                 {trade.status ===
-                                'ACTIVE' ? (
+                                    'ACTIVE' ? (
                                     <div className="trade-actions">
                                         <button
                                             type="button"

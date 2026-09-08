@@ -1,5 +1,6 @@
 import request from 'supertest';
 import { describe, expect, it } from 'vitest';
+import { testUserId } from './setup.js';
 
 import app from '../src/app.js';
 
@@ -15,6 +16,7 @@ describe('Trade API', () => {
 
   it('creates a trade', async () => {
     const newTrade = {
+      userId: testUserId,
       symbol: 'AAPL',
       quantity: 100,
       price: 182.43,
@@ -45,6 +47,7 @@ describe('Trade API', () => {
     const response = await request(app)
       .post('/api/trades')
       .send({
+        userId: testUserId,
         symbol: '',
         quantity: -10,
         price: 0,
@@ -61,6 +64,7 @@ describe('Trade API', () => {
     const createResponse = await request(app)
       .post('/api/trades')
       .send({
+        userId: testUserId,
         symbol: 'MSFT',
         quantity: 100,
         price: 400,
@@ -76,6 +80,7 @@ describe('Trade API', () => {
     const amendResponse = await request(app)
       .patch(`/api/trades/${tradeId}`)
       .send({
+        userId: testUserId,
         symbol: 'MSFT',
         quantity: 250,
         price: 410,
@@ -101,6 +106,7 @@ describe('Trade API', () => {
     const createResponse = await request(app)
       .post('/api/trades')
       .send({
+        userId: testUserId,
         symbol: 'GOOGL',
         quantity: 50,
         price: 200,
@@ -114,7 +120,8 @@ describe('Trade API', () => {
     const tradeId = createResponse.body.id;
 
     const cancelResponse = await request(app)
-      .post(`/api/trades/${tradeId}/cancel`);
+      .post(`/api/trades/${tradeId}/cancel`)
+      .send({ userId: testUserId });
 
     expect(cancelResponse.status).toBe(200);
 
@@ -128,6 +135,7 @@ describe('Trade API', () => {
     const response = await request(app)
       .patch('/api/trades/999999')
       .send({
+        userId: testUserId,
         symbol: 'AAPL',
         quantity: 100,
         price: 180,
@@ -142,7 +150,8 @@ describe('Trade API', () => {
 
   it('returns 404 when cancelling a nonexistent trade', async () => {
     const response = await request(app)
-      .post('/api/trades/999999/cancel');
+      .post('/api/trades/999999/cancel')
+      .send({ userId: testUserId });
 
     expect(response.status).toBe(404);
     expect(response.body.message).toBe('Trade not found');
@@ -152,6 +161,7 @@ describe('Trade API', () => {
     const createResponse = await request(app)
       .post('/api/trades')
       .send({
+        userId: testUserId,
         symbol: 'AAPL',
         quantity: 100,
         price: 180,
@@ -163,11 +173,13 @@ describe('Trade API', () => {
     const tradeId = createResponse.body.id;
 
     await request(app)
-      .post(`/api/trades/${tradeId}/cancel`);
+      .post(`/api/trades/${tradeId}/cancel`)
+      .send({ userId: testUserId });
 
     const amendResponse = await request(app)
       .patch(`/api/trades/${tradeId}`)
       .send({
+        userId: testUserId,
         symbol: 'AAPL',
         quantity: 200,
         price: 190,
@@ -186,6 +198,7 @@ describe('Trade API', () => {
     const createResponse = await request(app)
       .post('/api/trades')
       .send({
+        userId: testUserId,
         symbol: 'TSLA',
         quantity: 50,
         price: 300,
@@ -197,12 +210,14 @@ describe('Trade API', () => {
     const tradeId = createResponse.body.id;
 
     const firstCancelResponse = await request(app)
-      .post(`/api/trades/${tradeId}/cancel`);
+      .post(`/api/trades/${tradeId}/cancel`)
+      .send({ userId: testUserId });
 
     expect(firstCancelResponse.status).toBe(200);
 
     const secondCancelResponse = await request(app)
-      .post(`/api/trades/${tradeId}/cancel`);
+      .post(`/api/trades/${tradeId}/cancel`)
+      .send({ userId: testUserId });
 
     expect(secondCancelResponse.status).toBe(409);
     expect(secondCancelResponse.body.message).toBe(
@@ -214,6 +229,7 @@ describe('Trade API', () => {
     const amendResponse = await request(app)
       .patch('/api/trades/not-a-number')
       .send({
+        userId: testUserId,
         symbol: 'AAPL',
         quantity: 100,
         price: 180,
@@ -226,7 +242,8 @@ describe('Trade API', () => {
     expect(amendResponse.body.message).toBe('Invalid trade ID');
 
     const cancelResponse = await request(app)
-      .post('/api/trades/not-a-number/cancel');
+      .post('/api/trades/not-a-number/cancel')
+      .send({ userId: testUserId });
 
     expect(cancelResponse.status).toBe(400);
     expect(cancelResponse.body.message).toBe('Invalid trade ID');

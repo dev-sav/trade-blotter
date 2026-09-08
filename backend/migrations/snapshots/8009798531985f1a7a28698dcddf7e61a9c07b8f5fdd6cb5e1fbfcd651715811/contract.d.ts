@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'0ec6cfa06e6e2b80afcd9b15e01a075720f8ea4089560bb4d55ab1c20e00660f'>;
+  StorageHashBase<'8009798531985f1a7a28698dcddf7e61a9c07b8f5fdd6cb5e1fbfcd651715811'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -246,7 +246,7 @@ export type FieldOutputTypes = {
       readonly userId: CodecTypes['pg/int4@1']['output'];
       readonly action: 'CREATED' | 'AMENDED' | 'CANCELLED';
       readonly details: CodecTypes['pg/text@1']['output'] | null;
-      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
     readonly Trade: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -254,17 +254,17 @@ export type FieldOutputTypes = {
       readonly quantity: CodecTypes['pg/int4@1']['output'];
       readonly price: CodecTypes['pg/float8@1']['output'];
       readonly side: 'BUY' | 'SELL';
-      readonly trader: CodecTypes['pg/text@1']['output'];
-      readonly tradeTimestamp: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly traderId: CodecTypes['pg/int4@1']['output'];
+      readonly tradeTimestamp: CodecTypes['pg/timestamptz-temporal@1']['output'];
       readonly status: 'ACTIVE' | 'CANCELLED';
-      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
     readonly User: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
       readonly email: CodecTypes['pg/text@1']['output'];
-      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
   };
 };
@@ -276,7 +276,7 @@ export type FieldInputTypes = {
       readonly userId: CodecTypes['pg/int4@1']['input'];
       readonly action: 'CREATED' | 'AMENDED' | 'CANCELLED';
       readonly details: CodecTypes['pg/text@1']['input'] | null;
-      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
     readonly Trade: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -284,17 +284,17 @@ export type FieldInputTypes = {
       readonly quantity: CodecTypes['pg/int4@1']['input'];
       readonly price: CodecTypes['pg/float8@1']['input'];
       readonly side: 'BUY' | 'SELL';
-      readonly trader: CodecTypes['pg/text@1']['input'];
-      readonly tradeTimestamp: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly traderId: CodecTypes['pg/int4@1']['input'];
+      readonly tradeTimestamp: CodecTypes['pg/timestamptz-temporal@1']['input'];
       readonly status: 'ACTIVE' | 'CANCELLED';
-      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
     readonly User: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
       readonly email: CodecTypes['pg/text@1']['input'];
-      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
   };
 };
@@ -302,26 +302,26 @@ export type StorageColumnTypes = {
   readonly public: {
     readonly auditLog: {
       readonly action: 'CREATED' | 'AMENDED' | 'CANCELLED';
-      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
       readonly details: CodecTypes['pg/text@1']['output'] | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly tradeId: CodecTypes['pg/int4@1']['output'];
       readonly userId: CodecTypes['pg/int4@1']['output'];
     };
     readonly trade: {
-      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly price: CodecTypes['pg/float8@1']['output'];
       readonly quantity: CodecTypes['pg/int4@1']['output'];
       readonly side: 'BUY' | 'SELL';
       readonly status: 'ACTIVE' | 'CANCELLED';
       readonly symbol: CodecTypes['pg/text@1']['output'];
-      readonly trader: CodecTypes['pg/text@1']['output'];
-      readonly tradeTimestamp: CodecTypes['pg/timestamptz-string@1']['output'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly traderId: CodecTypes['pg/int4@1']['output'];
+      readonly tradeTimestamp: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
     readonly user: {
-      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['output'];
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['output'];
       readonly email: CodecTypes['pg/text@1']['output'];
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
@@ -332,26 +332,26 @@ export type StorageColumnInputTypes = {
   readonly public: {
     readonly auditLog: {
       readonly action: 'CREATED' | 'AMENDED' | 'CANCELLED';
-      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
       readonly details: CodecTypes['pg/text@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly tradeId: CodecTypes['pg/int4@1']['input'];
       readonly userId: CodecTypes['pg/int4@1']['input'];
     };
     readonly trade: {
-      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly price: CodecTypes['pg/float8@1']['input'];
       readonly quantity: CodecTypes['pg/int4@1']['input'];
       readonly side: 'BUY' | 'SELL';
       readonly status: 'ACTIVE' | 'CANCELLED';
       readonly symbol: CodecTypes['pg/text@1']['input'];
-      readonly trader: CodecTypes['pg/text@1']['input'];
-      readonly tradeTimestamp: CodecTypes['pg/timestamptz-string@1']['input'];
-      readonly updatedAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly traderId: CodecTypes['pg/int4@1']['input'];
+      readonly tradeTimestamp: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly updatedAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
     readonly user: {
-      readonly createdAt: CodecTypes['pg/timestamptz-string@1']['input'];
+      readonly createdAt: CodecTypes['pg/timestamptz-temporal@1']['input'];
       readonly email: CodecTypes['pg/text@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
@@ -409,7 +409,7 @@ type ContractBase = Omit<
                 };
                 readonly createdAt: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                 };
@@ -494,14 +494,14 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                 };
-                readonly trader: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
+                readonly traderId: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
                 };
                 readonly tradeTimestamp: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
                   readonly nullable: false;
                 };
                 readonly status: {
@@ -511,13 +511,13 @@ type ContractBase = Omit<
                 };
                 readonly createdAt: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                 };
                 readonly updatedAt: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                 };
@@ -543,8 +543,27 @@ type ContractBase = Omit<
                   readonly columns: readonly ['status'];
                   readonly unique: false;
                 },
+                {
+                  readonly name: 'trade_traderId_idx_2b1bcc57';
+                  readonly prefix: 'trade_traderId_idx';
+                  readonly columns: readonly ['traderId'];
+                  readonly unique: false;
+                },
               ];
-              foreignKeys: readonly [];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'trade';
+                    readonly columns: readonly ['traderId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'user';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
             };
             readonly user: {
               columns: {
@@ -569,7 +588,7 @@ type ContractBase = Omit<
                 };
                 readonly createdAt: {
                   readonly nativeType: 'timestamptz';
-                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
                 };
@@ -638,7 +657,7 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
                 };
               };
             };
@@ -698,15 +717,15 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly trader: {
+              readonly traderId: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
               readonly tradeTimestamp: {
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
                 };
               };
               readonly status: {
@@ -717,14 +736,14 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
                 };
               };
               readonly updatedAt: {
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
                 };
               };
             };
@@ -740,6 +759,14 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['tradeId'];
                 };
               };
+              readonly trader: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['traderId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
             };
             readonly storage: {
               readonly table: 'trade';
@@ -750,7 +777,7 @@ type ContractBase = Omit<
                 readonly quantity: { readonly column: 'quantity' };
                 readonly price: { readonly column: 'price' };
                 readonly side: { readonly column: 'side' };
-                readonly trader: { readonly column: 'trader' };
+                readonly traderId: { readonly column: 'traderId' };
                 readonly tradeTimestamp: { readonly column: 'tradeTimestamp' };
                 readonly status: { readonly column: 'status' };
                 readonly createdAt: { readonly column: 'createdAt' };
@@ -776,7 +803,7 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: {
                   readonly kind: 'scalar';
-                  readonly codecId: 'pg/timestamptz-string@1';
+                  readonly codecId: 'pg/timestamptz-temporal@1';
                 };
               };
             };
@@ -790,6 +817,17 @@ type ContractBase = Omit<
                 readonly on: {
                   readonly localFields: readonly ['id'];
                   readonly targetFields: readonly ['userId'];
+                };
+              };
+              readonly trades: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Trade';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['traderId'];
                 };
               };
             };

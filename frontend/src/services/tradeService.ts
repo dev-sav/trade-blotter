@@ -13,6 +13,7 @@ export async function getTrades(): Promise<Trade[]> {
 }
 
 export interface CreateTradeRequest {
+    userId: number,
     symbol: string;
     quantity: number;
     price: number;
@@ -71,11 +72,18 @@ export async function amendTrade(
 
 export async function cancelTrade(
     id: number,
+    userId: number,
 ): Promise<Trade> {
     const response = await fetch(
         `${API_BASE_URL}/trades/${id}/cancel`,
         {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId,
+            }),
         },
     );
 

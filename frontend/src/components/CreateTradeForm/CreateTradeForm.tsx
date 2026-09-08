@@ -8,11 +8,13 @@ import type { Trade } from '../../types/trade';
 import './CreateTradeForm.css'
 
 interface CreateTradeFormProps {
+  currentUserId: number | null;
   onCreated: (trade: Trade) => void;
   onCancel: () => void;
 }
 
 function CreateTradeForm({
+  currentUserId,
   onCreated,
   onCancel,
 }: CreateTradeFormProps) {
@@ -54,7 +56,13 @@ function CreateTradeForm({
       return;
     }
 
+    if (currentUserId === null) {
+      setError('Please select a current user');
+      return;
+    }
+
     const payload: CreateTradeRequest = {
+      userId: currentUserId,
       symbol: symbol.trim().toUpperCase(),
       quantity: Number(quantity),
       price: Number(price),
@@ -80,133 +88,133 @@ function CreateTradeForm({
     }
   }
 
-    return (
-      <div className="modal-backdrop">
-        <div className="modal">
-          <div className="modal-header">
-            <div>
-              <h2>Create Trade</h2>
-              <p>Enter the details for the new trade.</p>
-            </div>
-
-            <button
-              type="button"
-              className="icon-button"
-              onClick={onCancel}
-              aria-label="Close"
-            >
-              ×
-            </button>
+  return (
+    <div className="modal-backdrop">
+      <div className="modal">
+        <div className="modal-header">
+          <div>
+            <h2>Create Trade</h2>
+            <p>Enter the details for the new trade.</p>
           </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="form-grid">
-              <label>
-                Symbol
-                <input
-                  value={symbol}
-                  onChange={(event) =>
-                    setSymbol(event.target.value)
-                  }
-                  placeholder="AAPL"
-                  maxLength={20}
-                />
-              </label>
-
-              <label>
-                Side
-                <select
-                  value={side}
-                  onChange={(event) =>
-                    setSide(
-                      event.target.value as 'BUY' | 'SELL',
-                    )
-                  }
-                >
-                  <option value="BUY">BUY</option>
-                  <option value="SELL">SELL</option>
-                </select>
-              </label>
-
-              <label>
-                Quantity
-                <input
-                  type="number"
-                  min="1"
-                  step="1"
-                  value={quantity}
-                  onChange={(event) =>
-                    setQuantity(event.target.value)
-                  }
-                  placeholder="100"
-                />
-              </label>
-
-              <label>
-                Price
-                <input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={price}
-                  onChange={(event) =>
-                    setPrice(event.target.value)
-                  }
-                  placeholder="182.43"
-                />
-              </label>
-
-              <label>
-                Trader
-                <input
-                  value={trader}
-                  onChange={(event) =>
-                    setTrader(event.target.value)
-                  }
-                  placeholder="Trader name"
-                />
-              </label>
-
-              <label>
-                Trade Date
-                <input
-                  type="datetime-local"
-                  value={tradeTimestamp}
-                  onChange={(event) =>
-                    setTradeTimestamp(event.target.value)
-                  }
-                />
-              </label>
-            </div>
-
-            {error && (
-              <div className="form-error">
-                {error}
-              </div>
-            )}
-
-            <div className="modal-actions">
-              <button
-                type="button"
-                className="secondary-button"
-                onClick={onCancel}
-                disabled={saving}
-              >
-                Cancel
-              </button>
-
-              <button
-                type="submit"
-                className="primary-button"
-                disabled={saving}
-              >
-                {saving ? 'Creating...' : 'Create Trade'}
-              </button>
-            </div>
-          </form>
+          <button
+            type="button"
+            className="icon-button"
+            onClick={onCancel}
+            aria-label="Close"
+          >
+            ×
+          </button>
         </div>
+
+        <form onSubmit={handleSubmit}>
+          <div className="form-grid">
+            <label>
+              Symbol
+              <input
+                value={symbol}
+                onChange={(event) =>
+                  setSymbol(event.target.value)
+                }
+                placeholder="AAPL"
+                maxLength={20}
+              />
+            </label>
+
+            <label>
+              Side
+              <select
+                value={side}
+                onChange={(event) =>
+                  setSide(
+                    event.target.value as 'BUY' | 'SELL',
+                  )
+                }
+              >
+                <option value="BUY">BUY</option>
+                <option value="SELL">SELL</option>
+              </select>
+            </label>
+
+            <label>
+              Quantity
+              <input
+                type="number"
+                min="1"
+                step="1"
+                value={quantity}
+                onChange={(event) =>
+                  setQuantity(event.target.value)
+                }
+                placeholder="100"
+              />
+            </label>
+
+            <label>
+              Price
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={price}
+                onChange={(event) =>
+                  setPrice(event.target.value)
+                }
+                placeholder="182.43"
+              />
+            </label>
+
+            <label>
+              Trader
+              <input
+                value={trader}
+                onChange={(event) =>
+                  setTrader(event.target.value)
+                }
+                placeholder="Trader name"
+              />
+            </label>
+
+            <label>
+              Trade Date
+              <input
+                type="datetime-local"
+                value={tradeTimestamp}
+                onChange={(event) =>
+                  setTradeTimestamp(event.target.value)
+                }
+              />
+            </label>
+          </div>
+
+          {error && (
+            <div className="form-error">
+              {error}
+            </div>
+          )}
+
+          <div className="modal-actions">
+            <button
+              type="button"
+              className="secondary-button"
+              onClick={onCancel}
+              disabled={saving}
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              className="primary-button"
+              disabled={saving}
+            >
+              {saving ? 'Creating...' : 'Create Trade'}
+            </button>
+          </div>
+        </form>
       </div>
-    );
+    </div>
+  );
 }
 
 export default CreateTradeForm;

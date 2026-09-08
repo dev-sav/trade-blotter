@@ -5,6 +5,7 @@ export interface CreateTradeRequest {
   side: 'BUY' | 'SELL';
   trader: string;
   tradeTimestamp: string;
+  userId: number;
 }
 
 export function validateCreateTradeRequest(
@@ -84,6 +85,17 @@ export function validateCreateTradeRequest(
     };
   }
 
+  if (
+    typeof request.userId !== 'number' ||
+    !Number.isInteger(request.userId) ||
+    request.userId <= 0
+  ) {
+    return {
+      valid: false,
+      message: 'Valid userId is required',
+    };
+  }
+
   return {
     valid: true,
     data: {
@@ -93,6 +105,7 @@ export function validateCreateTradeRequest(
       side: request.side,
       trader: request.trader.trim(),
       tradeTimestamp: request.tradeTimestamp,
+      userId: request.userId,
     },
   };
 }
@@ -100,13 +113,14 @@ export function validateCreateTradeRequest(
 
 ///  AMMEND  ///
 
- export interface AmendTradeRequest {
+export interface AmendTradeRequest {
   symbol: string;
   quantity: number;
   price: number;
   side: 'BUY' | 'SELL';
   trader: string;
   tradeTimestamp: string;
+  userId: number;
 }
 
 export function validateAmendTradeRequest(
@@ -186,6 +200,17 @@ export function validateAmendTradeRequest(
     };
   }
 
+  if (
+    typeof request.userId !== 'number' ||
+    !Number.isInteger(request.userId) ||
+    request.userId <= 0
+  ) {
+    return {
+      valid: false,
+      message: 'Valid userId is required',
+    };
+  }
+
   return {
     valid: true,
     data: {
@@ -195,6 +220,45 @@ export function validateAmendTradeRequest(
       side: request.side,
       trader: request.trader.trim(),
       tradeTimestamp: request.tradeTimestamp,
+      userId: request.userId,
+    },
+  };
+}
+
+export interface CancelTradeRequest {
+  userId: number;
+}
+
+export function validateCancelTradeRequest(
+  body: unknown,
+): { valid: true; data: CancelTradeRequest } | {
+  valid: false;
+  message: string;
+} {
+  if (!body || typeof body !== 'object') {
+    return {
+      valid: false,
+      message: 'Request body is required',
+    };
+  }
+
+  const request = body as Record<string, unknown>;
+
+  if (
+    typeof request.userId !== 'number' ||
+    !Number.isInteger(request.userId) ||
+    request.userId <= 0
+  ) {
+    return {
+      valid: false,
+      message: 'Valid userId is required',
+    };
+  }
+
+  return {
+    valid: true,
+    data: {
+      userId: request.userId,
     },
   };
 }

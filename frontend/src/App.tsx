@@ -5,6 +5,8 @@ import { TradeFilters } from './components/TradeFilters/TradeFilters';
 import { TradeTable } from './components/TradeTable/TradeTable';
 import { getTrades } from './services/tradeService';
 import type { Trade, TradeSide, TradeStatus } from './types/trade';
+import type { User } from './types/user';
+import { getUsers } from './services/userService';
 import AmendTradeForm from './components/AmendTradeForm/AmendTradeForm'
 import CancelTradeDialog from './components/CancelTradeDialog/CancelTradeDialog';
 
@@ -24,6 +26,9 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [showCreateForm, setShowCreateForm] = useState(false);
+
+  const [users, setUsers] = useState<User[]>([]);
+  const [currentUserId, setCurrentUserId] = useState<number | null>(null);
 
 
   const [tradeToAmend, setTradeToAmend] =
@@ -54,6 +59,24 @@ function App() {
   }, []);
 
   useEffect(() => {
+    async function loadUsers() {
+      try {
+        const data = await getUsers();
+
+        setUsers(data);
+
+        if (data.length > 0) {
+          setCurrentUserId(data[0].id);
+        }
+      } catch (error) {
+        console.error('Failed to load users:', error);
+      }
+    }
+
+    loadUsers();
+  }, []);
+
+  useEffect(() => {
     const disconnect = connectToTradeUpdates(handleTradeEvent);
 
     return disconnect;
@@ -62,8 +85,17 @@ function App() {
   function handleTradeEvent(event: TradeEvent) {
     setTrades((currentTrades) => {
       switch (event.type) {
-        case 'TRADE_CREATED':
-          return [...currentTrades, event.trade];
+        case 'TRADE_CREATED': {
+          const existingTrade = currentTrades.some(
+            (trade) => trade.id === event.trade.id,
+          );
+
+          if (existingTrade) {
+            return currentTrades;
+          }
+
+          return [event.trade, ...currentTrades];
+        }
 
         case 'TRADE_UPDATED':
         case 'TRADE_CANCELLED':
@@ -111,13 +143,39 @@ function App() {
             <h1>Trade Blotter</h1>
             <p>View and manage executed trades.</p>
           </div>
+          <div className="header-actions">
+            <div className="current-user">
+              <label htmlFor="current-user">
+                Acting as:
+              </label>
 
-          <button
-            type="button"
-            onClick={() => setShowCreateForm(true)}
-          >
-            + New Trade
-          </button>
+              <select
+                id="current-user"
+                value={currentUserId ?? ''}
+                onChange={(event) =>
+                  setCurrentUserId(Number(event.target.value))
+                }
+              >
+                <option value="" disabled>
+                  Select user
+                </option>
+
+                {users.map((user) => (
+                  <option key={user.id} value={user.id}>
+                    {user.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowCreateForm(true)}
+            >
+              <span className="new-trade-icon">+</span>
+              <span>New Trade</span>
+            </button>
+          </div>
         </header>
 
         <section className="app-content">
@@ -151,11 +209,19 @@ function App() {
 
       {showCreateForm && (
         <CreateTradeForm
+          currentUserId={currentUserId}
           onCreated={(trade) => {
-            setTrades((currentTrades) => [
-              trade,
-              ...currentTrades,
-            ]);
+            setTrades((currentTrades) => {
+              if (
+                currentTrades.some(
+                  (currentTrade) => currentTrade.id === trade.id,
+                )
+              ) {
+                return currentTrades;
+              }
+
+              return [trade, ...currentTrades];
+            });
 
             setShowCreateForm(false);
           }}
@@ -166,6 +232,7 @@ function App() {
       {tradeToAmend && (
         <AmendTradeForm
           trade={tradeToAmend}
+          currentUserId={currentUserId}
           onUpdated={(updatedTrade) => {
             setTrades((currentTrades) =>
               currentTrades.map((trade) =>
@@ -184,6 +251,7 @@ function App() {
       {tradeToCancel && (
         <CancelTradeDialog
           trade={tradeToCancel}
+          currentUserId={currentUserId}
           onCancelled={(cancelledTrade) => {
             setTrades((currentTrades) =>
               currentTrades.map((trade) =>

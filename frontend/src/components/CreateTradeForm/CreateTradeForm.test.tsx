@@ -28,6 +28,7 @@ describe('CreateTradeForm', () => {
 
         render(
             <CreateTradeForm
+                currentUserId={1}
                 onCreated={onCreated}
                 onCancel={onCancel}
             />,

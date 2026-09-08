@@ -3,6 +3,7 @@ import type { Request, Response } from 'express';
 import {
     validateAmendTradeRequest,
     validateCreateTradeRequest,
+    validateCancelTradeRequest
 } from '../validation/tradeValidation.js';
 
 import { broadcastTradeUpdate } from '../services/websocketService.js';
@@ -26,9 +27,9 @@ export async function getTradesController(
         console.error('Failed to retrieve trades:', error);
 
         return res.status(500).json({
-    message: 'Failed to retrieve trades',
-    error: error instanceof Error ? error.message : String(error),
-});
+            message: 'Failed to retrieve trades',
+            error: error instanceof Error ? error.message : String(error),
+        });
     }
 }
 
@@ -132,8 +133,19 @@ export async function cancelTradeController(
         });
     }
 
+    const validation = validateCancelTradeRequest(req.body);
+
+    if (!validation.valid) {
+        return res.status(400).json({
+            message: validation.message,
+        });
+    }
+
     try {
-        const trade = await cancelTrade(id);
+        const trade = await cancelTrade(
+            id,
+            validation.data.userId,
+        );
 
         broadcastTradeUpdate({
             type: 'TRADE_CANCELLED',
@@ -149,9 +161,7 @@ export async function cancelTradeController(
                 });
             }
 
-            if (
-                error.message === 'TRADE_ALREADY_CANCELLED'
-            ) {
+            if (error.message === 'TRADE_ALREADY_CANCELLED') {
                 return res.status(409).json({
                     message: 'Trade is already cancelled',
                 });

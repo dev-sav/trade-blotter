@@ -14,12 +14,14 @@ import './AmendTradeForm.css';
 
 interface AmendTradeFormProps {
   trade: Trade;
+  currentUserId: number | null;
   onUpdated: (trade: Trade) => void;
   onCancel: () => void;
 }
 
 function AmendTradeForm({
   trade,
+  currentUserId,
   onUpdated,
   onCancel,
 }: AmendTradeFormProps) {
@@ -74,6 +76,11 @@ function AmendTradeForm({
       return;
     }
 
+    if (currentUserId === null) {
+      setError('Please select a current user');
+      return;
+    }
+
     const payload: CreateTradeRequest = {
       symbol: symbol.trim().toUpperCase(),
       quantity: Number(quantity),
@@ -83,6 +90,7 @@ function AmendTradeForm({
       tradeTimestamp: new Date(
         tradeTimestamp,
       ).toISOString(),
+      userId: currentUserId,
     };
 
     try {

@@ -34,6 +34,7 @@ describe('CancelTradeDialog', () => {
         render(
             <CancelTradeDialog
                 trade={trade}
+                currentUserId={1}
                 onCancelled={onCancelled}
                 onCancel={onCancel}
             />,
@@ -52,7 +53,7 @@ describe('CancelTradeDialog', () => {
         );
 
         await waitFor(() => {
-            expect(tradeService.cancelTrade).toHaveBeenCalledWith(10);
+            expect(tradeService.cancelTrade).toHaveBeenCalledWith(10, 1);
         });
 
         expect(onCancelled).toHaveBeenCalledWith(cancelledTrade);
