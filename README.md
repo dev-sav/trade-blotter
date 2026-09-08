@@ -149,6 +149,10 @@ From the `backend` directory:
     npm install
     npm test
 
+If Postgres is reset, rebuild shema before running the test:
+
+    DATABASE_URL="postgresql://postgres:postgres@localhost:5432/tradeblotter_test" npx prisma db update
+
 The backend test configuration uses:
 
     backend/.env.test
