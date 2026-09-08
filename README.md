@@ -53,6 +53,14 @@ A full-stack trade blotter application for viewing and managing trades with real
 
 ## Getting Started
 
+### Deployment
+
+The application is deployed on Render and can be accessed here:
+
+**Live Demo:** [https://trade-blotter.onrender.com/](https://trade-blotter.onrender.com/)
+
+> **Note:** The application is hosted on Render's free tier. The service may spin down after a period of inactivity. Because of this, the first request may take a little while to load while the service starts back up.
+
 ### Prerequisites
 
 To run the complete application using Docker, you only need:
