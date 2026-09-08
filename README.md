@@ -147,7 +147,7 @@ The project uses a separate PostgreSQL database for backend tests so that tests 
 From the `backend` directory:
 
     npm install
-    npm test
+    npm run test
 
 If Postgres is reset, rebuild shema before running the test:
 
@@ -164,7 +164,7 @@ which points to the `tradeblotter_test` database.
 From the `frontend` directory:
 
     npm install
-    npm test
+    npm run test
 
 Frontend tests use Vitest, JSDOM, and React Testing Library.
 
