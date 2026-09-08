@@ -16,15 +16,14 @@ beforeAll(async () => {
     (user) => user.email === 'sav@example.com',
   );
 
-  if (existingUser) {
-    testUserId = existingUser.id;
-    return;
+  testUserId = existingUser?.id ?? 0;
+
+  if (testUserId === 0) {
+    const user = await db.orm.public.User.create({
+      name: 'Sav',
+      email: 'sav@example.com',
+    });
+
+    testUserId = user.id;
   }
-
-  const user = await db.orm.public.User.create({
-    name: 'Sav',
-    email: 'sav@example.com',
-  });
-
-  testUserId = user.id;
 });
